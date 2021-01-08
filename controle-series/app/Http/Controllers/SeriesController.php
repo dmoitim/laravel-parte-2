@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SeriesFormRequest;
 use App\Serie;
+use App\Services\CriadorDeSerie;
 use Symfony\Component\HttpFoundation\Request;
 
 class SeriesController extends Controller
@@ -21,23 +22,13 @@ class SeriesController extends Controller
         return view('series.create');
     }
 
-    public function store(SeriesFormRequest $request)
+    public function store(SeriesFormRequest $request, CriadorDeSerie $criadorDeSerie)
     {
-        $nome = $request->nome;
-        $serie = Serie::create([
-            'nome' => $nome
-        ]);
-
-        $qtd_temporadas = $request->qtd_temporadas;
-        $ep_por_temporada = $request->ep_por_temporada;
-
-        for ($i = 1; $i <= $qtd_temporadas; $i++) {
-            $temporada = $serie->temporadas()->create(['numero' => $i]);
-
-            for ($j = 1; $j <= $ep_por_temporada; $j++) {
-                $episodio = $temporada->episodios()->create(['numero' => $j]);
-            }
-        }
+        $serie = $criadorDeSerie->criarSerie(
+            $request->nome,
+            $request->qtd_temporadas,
+            $request->ep_por_temporada
+        );
 
         $request->session()->flash(
             'mensagem',
