@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SeriesFormRequest;
+use App\Models\Episodio;
+use App\Models\Temporada;
 use App\Serie;
 use App\Services\CriadorDeSerie;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,13 +42,22 @@ class SeriesController extends Controller
 
     public function destroy(Request $request)
     {
-        $id = $request->id;
+        $serie = Serie::find($request->id);
+        $nomeSerie = $serie->nome;
 
-        Serie::destroy($id);
+        $serie->temporadas->each(function (Temporada $temporada) {
+            $temporada->episodios()->each(function (Episodio $episodio) {
+                $episodio->delete();
+            });
+
+            $temporada->delete();
+        });
+
+        $serie->delete();
 
         $request->session()->flash(
             'mensagem',
-            "Série ID {$id} excluída com sucesso."
+            "Série $nomeSerie excluída com sucesso."
         );
 
         return redirect()->route('listar_series');
