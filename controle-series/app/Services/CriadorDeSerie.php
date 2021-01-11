@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Temporada;
 use App\Serie;
+use Illuminate\Support\Facades\DB;
 
 class CriadorDeSerie
 {
@@ -10,19 +12,28 @@ class CriadorDeSerie
         string $nomeSerie,
         int $qtdTemporadas,
         int $epPorTemporada
-    ) {
-        $serie = Serie::create([
-            'nome' => $nomeSerie
-        ]);
+    ): Serie {
+        DB::beginTransaction();
+        $serie = Serie::create(['nome' => $nomeSerie]);
+        $this->criaTemporadas($qtdTemporadas, $epPorTemporada, $serie);
+        DB::commit();
 
+        return $serie;
+    }
+
+    private function criaTemporadas(int $qtdTemporadas, int $epPorTemporada, Serie $serie): void
+    {
         for ($i = 1; $i <= $qtdTemporadas; $i++) {
             $temporada = $serie->temporadas()->create(['numero' => $i]);
 
-            for ($j = 1; $j <= $epPorTemporada; $j++) {
-                $temporada->episodios()->create(['numero' => $j]);
-            }
+            $this->criaEpisodios($epPorTemporada, $temporada);
         }
+    }
 
-        return $serie;
+    private function criaEpisodios(int $epPorTemporada, Temporada $temporada): void
+    {
+        for ($j = 1; $j <= $epPorTemporada; $j++) {
+            $temporada->episodios()->create(['numero' => $j]);
+        }
     }
 }

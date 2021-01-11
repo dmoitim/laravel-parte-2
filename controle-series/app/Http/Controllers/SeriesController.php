@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SeriesFormRequest;
-use App\Models\Episodio;
-use App\Models\Temporada;
 use App\Serie;
 use App\Services\CriadorDeSerie;
+use App\Services\RemovedorDeSerie;
 use Symfony\Component\HttpFoundation\Request;
 
 class SeriesController extends Controller
@@ -24,42 +23,34 @@ class SeriesController extends Controller
         return view('series.create');
     }
 
-    public function store(SeriesFormRequest $request, CriadorDeSerie $criadorDeSerie)
-    {
+    public function store(
+        SeriesFormRequest $request,
+        CriadorDeSerie $criadorDeSerie
+    ) {
         $serie = $criadorDeSerie->criarSerie(
             $request->nome,
             $request->qtd_temporadas,
             $request->ep_por_temporada
         );
 
-        $request->session()->flash(
-            'mensagem',
-            "Série {$serie->nome} e suas temporadas e episódios criados com sucesso."
-        );
+        $request->session()
+            ->flash(
+                'mensagem',
+                "Série {$serie->id} e suas temporadas e episódios criados com sucesso {$serie->nome}"
+            );
 
         return redirect()->route('listar_series');
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request, RemovedorDeSerie $removedorDeSerie)
     {
-        $serie = Serie::find($request->id);
-        $nomeSerie = $serie->nome;
+        $nomeSerie = $removedorDeSerie->removerSerie($request->id);
 
-        $serie->temporadas->each(function (Temporada $temporada) {
-            $temporada->episodios()->each(function (Episodio $episodio) {
-                $episodio->delete();
-            });
-
-            $temporada->delete();
-        });
-
-        $serie->delete();
-
-        $request->session()->flash(
-            'mensagem',
-            "Série $nomeSerie excluída com sucesso."
-        );
-
+        $request->session()
+            ->flash(
+                'mensagem',
+                "Série $nomeSerie removida com sucesso"
+            );
         return redirect()->route('listar_series');
     }
 }
