@@ -11,16 +11,17 @@ Episódios
 </div>
 @endif
 
-<ul class="list-group">
-    <form action="">
+<form action="/temporadas/{{ $temporadaId }}/episodios/assistir" method="POST">
+    @csrf
+    <ul class="list-group">
         @foreach ($episodios as $episodio)
         <li class="list-group-item d-flex justify-content-between align-items-center">
             Episódio {{ $episodio->numero }}
-            <input type="checkbox" name="" id="">
+            <input type="checkbox" name="episodios[]" value="{{ $episodio->id }}">
         </li>
         @endforeach
+    </ul>
 
-        <button class="btn btn-primary mt-2 mb-2">Salvar</button>
-    </form>
-</ul>
+    <button class="btn btn-primary mt-2 mb-2">Salvar</button>
+</form>
 @endsection
