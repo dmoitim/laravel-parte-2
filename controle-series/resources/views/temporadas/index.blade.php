@@ -5,11 +5,7 @@ Temporadas da série {{ $serie->nome }}
 @endsection
 
 @section('conteudo')
-@if(!empty($mensagem))
-<div class="alert alert-success">
-    {{ $mensagem }}
-</div>
-@endif
+@includeWhen(!empty($mensagem), 'mensagem', ['mensagem' => $mensagem])
 
 <ul class="list-group">
     @foreach ($temporadas as $temporada)

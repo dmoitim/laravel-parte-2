@@ -5,11 +5,7 @@ Episódios
 @endsection
 
 @section('conteudo')
-@if(!empty($mensagem))
-<div class="alert alert-success">
-    {{ $mensagem }}
-</div>
-@endif
+@includeWhen(!empty($mensagem), 'mensagem', ['mensagem' => $mensagem])
 
 <form action="/temporadas/{{ $temporadaId }}/episodios/assistir" method="POST">
     @csrf
@@ -17,7 +13,7 @@ Episódios
         @foreach ($episodios as $episodio)
         <li class="list-group-item d-flex justify-content-between align-items-center">
             Episódio {{ $episodio->numero }}
-            <input type="checkbox" name="episodios[]" value="{{ $episodio->id }}">
+            <input type="checkbox" name="episodios[]" value="{{ $episodio->id }}" {{ $episodio->assistido ? 'checked' : '' }}>
         </li>
         @endforeach
     </ul>
