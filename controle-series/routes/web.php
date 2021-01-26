@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\EntrarController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\TemporadasController;
 use App\Http\Controllers\EpisodiosController;
+use App\Http\Controllers\RegistroController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -32,3 +34,7 @@ Route::get('/temporadas/{temporada}/episodios', [EpisodiosController::class, 'in
 Route::post('/temporadas/{temporada}/episodios/assistir', [EpisodiosController::class, 'assistir']);
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/entrar', [EntrarController::class, 'index']);
+Route::post('/entrar', [EntrarController::class, 'entrar']);
+Route::get('/registrar', [RegistroController::class, 'create']);
+Route::post('/registrar', [RegistroController::class, 'store']);
