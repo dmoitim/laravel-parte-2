@@ -16,7 +16,9 @@ class EntrarController extends Controller
     {
         $autenticado = Auth::attempt($request->only(['email', 'password']));
         if (!$autenticado) {
-            return redirect()->back()->withErrors('Usuárioe/ou senha incorreta;');
+            return redirect()->back()->withErrors('Usuário e/ou senha incorreta;');
         }
+
+        return redirect()->route('listar_series');
     }
 }
