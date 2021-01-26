@@ -25,13 +25,13 @@ Route::get('/', function () {
 });
 
 Route::get('/series', [SeriesController::class, 'index'])->name('listar_series');
-Route::get('/series/criar', [SeriesController::class, 'create'])->name('form_criar_serie')->middleware('auth');
-Route::post('/series/criar', [SeriesController::class, 'store'])->middleware('auth');
-Route::delete('/series/{id}', [SeriesController::class, 'destroy'])->middleware('auth');
+Route::get('/series/criar', [SeriesController::class, 'create'])->name('form_criar_serie')->middleware('autenticador');
+Route::post('/series/criar', [SeriesController::class, 'store'])->middleware('autenticador');
+Route::delete('/series/{id}', [SeriesController::class, 'destroy'])->middleware('autenticador');
 Route::get('/series/{serieId}/temporadas', [TemporadasController::class, 'index'])->name('listar_temporadas');
-Route::post('/series/{id}/editaNome', [SeriesController::class, 'editaNome'])->middleware('auth');
+Route::post('/series/{id}/editaNome', [SeriesController::class, 'editaNome'])->middleware('autenticador');
 Route::get('/temporadas/{temporada}/episodios', [EpisodiosController::class, 'index']);
-Route::post('/temporadas/{temporada}/episodios/assistir', [EpisodiosController::class, 'assistir'])->middleware('auth');
+Route::post('/temporadas/{temporada}/episodios/assistir', [EpisodiosController::class, 'assistir'])->middleware('autenticador');
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/entrar', [EntrarController::class, 'index']);
