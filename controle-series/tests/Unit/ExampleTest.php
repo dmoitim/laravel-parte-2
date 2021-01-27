@@ -13,6 +13,7 @@ class ExampleTest extends TestCase
      */
     public function testBasicTest()
     {
-        $this->assertTrue(true);
+        $soma = 2 + 2;
+        $this->assertEquals(4, $soma);
     }
 }
